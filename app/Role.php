@@ -4,47 +4,80 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Permission;
+
 class Role extends Model
 {
-    
-
-	protected $filable = ['name']; 
 
 
-	/**
-	 * Relationsheep with User Class
-	 * hasMany 
-	 */
+	protected $filable = ['name', 'label']; 
+
+	protected static $baseRoles = [ 'user', 'teacher', 'manager', 'administrator' ];
+
+	protected static $defaultRoleName = 'user';
+
+
+
+	static public function getDefaultRoleName ()
+	{	
+		return self::$defaultRoleName;
+	}
+
+
+
+	/*
+	* --------------------
+	* Model RELATION SHIPS 
+	* --------------------
+	* Users Model
+	* Permissions Model
+	*/
+	
 	public function users()
 	{	
 		return $this->belongsToMany('App\User');			
 	}
 
-	/**
-	 * validate if given role exist in db
-	 * @param $roleName, string, role to look up in db
-	 * @return bool 
-	 */
-	public function existInDb ( $roleName )
+
+	
+
+	public function permissions()
 	{
-
-		if( empty($this->where('name', '=', $roleName)->first()) ){
-
-			return false;	
-		}
-		
-		return true;
+		return $this->belongsToMany('App\Permission')->withTimeStamps();
 	}
 
+
+	
+
 	/**
-	 * Create role
-	 * @param roleNam, string
-	 * @return Obj roleName
+	 * Gives permission to a Role, to execute a specifc task ( can_view, can_edit, can_manage )
+	 * Link the role and permission tables in the role_permission table
+	 *
+	 * @param $Permissions null || string || permission obj 
 	 */
-	public function createNew ($roleName)
+	public function addPermissionTo ( $permission )
 	{
-		$this->name = $roleName;
-		return $this->save();
+
+		$permissionToAssign = $permission;
+
+		if ( $permission === null ){
+
+			$defaultPermission = Permission::getDefaultPermissionName();
+				
+
+			$permissionToAssign = Permission::whereName( $defaultPermission )->get()->first();
+
+		}
+
+
+		if ( is_string( $permission ) ){
+
+			$permissionToAssign = Permission::whereName( $permission )->get()->first();
+
+		}
+
+
+		return $this->permissions()->save( $permissionToAssign );
 	}
 
 }

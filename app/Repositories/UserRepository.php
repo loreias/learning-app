@@ -122,7 +122,7 @@ Class UserRepository {
 
 
 	/**
-	 * Register User && and role
+	 * Register User && Add Role && permission
 	 *
 	 * @param array, user data to register
      * @param listener, Obj, callback fn for AuthController@looggedUserRedirect 
@@ -130,6 +130,9 @@ Class UserRepository {
      */
 	public function register( $data, $isSocial = false )
     {
+
+        $permissionToAssign = null;
+        $roleToAssign       = null;
 
         /**
          * user register through social media provider generate a random psw
@@ -142,11 +145,10 @@ Class UserRepository {
             $password       = bcrypt(str_random(8));
         }else{
             
-            $first_name = $data['first_name'];
-            $last_name  = $data['last_name'];
-            $email      = $data['email'];
-            $password   = Hash::make($data['password']);
-            
+            $first_name     = $data['first_name'];
+            $last_name      = $data['last_name'];
+            $email          = $data['email'];
+            $password       = Hash::make($data['password']);
         } 
 
         
@@ -156,41 +158,32 @@ Class UserRepository {
             'email'         => $email,        
             'password'      => $password,
         ]);    
-        
+
+
+        # role pass by the register user form
+        if( isset( $data['role'] ) ){
+
+            $roleToAssign = $data['role'];
+        } 
+
         
 
-        # default role to apply 
-        $defaultRole = 'user'; 
+        if( isset( $data['permission'] )){
+
+            $permissionToAssign = $data['permission'];       
+        }
+
+
+        # assign a role to the user, use the pass role  or fallback to a default role
+        $assignedRole = $user->assignRole( $roleToAssign ); 
        
-
-        /**
-         * validate if the USER role exist in db
-         * Create the USER role if does not exist in the db 
-         */    
-        if( ! $this->role->existInDb($defaultRole) ){
-            // create the user role
-            $this->role->createNew($defaultRole);
-        }
-
-
-        # if a role was pass with the user data applay it  
-        if(isset($data['role'])){
-            $defaultRole = $data['role'];
-        }
-
-
-        //fetch Role Obj from db
-        $role = Role::whereName($defaultRole)->first();
-     
-        $user->assignRole($role);
-    
         return $user;
     }
 
 
 
-    /**
-     * Reset Password
+    /*
+*     * Reset Password
      *
      * @Param User Obj
      */

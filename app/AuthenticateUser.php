@@ -54,7 +54,7 @@ class AuthenticateUser {
 	
 		# call findOrCreateSocialUser method  on UserRepository Class to find the passed user from oAuth API (socialite) in the db or created with the passed		
 		$user = $this->users->findOrCreateSocialUser( $this->getProviderUser($provider), $provider );
-
+		
 
 		# login returned user and remember it
 		$this->auth->login($user, true);

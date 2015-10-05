@@ -81,11 +81,16 @@ class AuthController extends Controller
         }
     
     
-        # apply this validation in the User Model in the rules property pass to the form validation in the 
-        isset($input['role']) && $input['role'] !== "" && $input['role'] !== "administrator" 
+        # Validte if there is a Role pass in through the create user form 
+        isset($input['role']) && $input['role'] !== "" 
             ? $roleToAssign = $input['role']
             : $roleToAssign = null;
-        
+    
+        # Validate f there is a permission pass throuth the form 
+        isset( $input['permission'] ) && $input['permission'] !== "" 
+            ? $permissionToAssign = $input['permission']
+            : $permissionToAssign = null;
+
 
         $data = [
             'first_name'    => $input['first_name'],
@@ -93,13 +98,12 @@ class AuthController extends Controller
             'email'         => $input['email'],
             'password'      => $input['password'],
             'role'          => $roleToAssign,
+            'permission'    => $permissionToAssign,
         ];
 
         # register the user
         $user = $this->userRepository->register($data);
-
-        # redirect the user;
-        # $this->loggedUserRedirect($user);
+       
 
         # return redirect()->route('login')
         return redirect('login')    
