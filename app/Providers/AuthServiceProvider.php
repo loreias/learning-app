@@ -27,6 +27,7 @@ class AuthServiceProvider extends ServiceProvider
      * @return void
      */
     
+    /*
     public function boot(GateContract $gate)
     {
         parent::registerPolicies($gate);
@@ -40,9 +41,8 @@ class AuthServiceProvider extends ServiceProvider
                 
             });
         }
-         
     }
-    
+    */    
     
 
 

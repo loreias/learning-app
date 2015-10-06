@@ -55,6 +55,7 @@ class Role extends Model
 	 *
 	 * @param $Permissions null || string || permission obj 
 	 */
+	/*
 	public function addPermissionTo ( $permission )
 	{
 
@@ -79,5 +80,25 @@ class Role extends Model
 
 		return $this->permissions()->save( $permissionToAssign );
 	}
+	*/
+
+
+
+    /**
+     * Get users by role
+     *
+     * @param $roleName, string
+     * @return collection, $users with passed role name 
+     */
+    public function getUsersByRoleName ( $roleName )
+    {
+        // get the role id
+        $role = $this->whereName( $roleName )->firstOrFail();
+    
+        // get all users with the defined roleName
+        $users = $role->users()->get();
+
+        return $users;
+    }
 
 }

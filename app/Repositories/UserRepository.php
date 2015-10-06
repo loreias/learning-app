@@ -69,7 +69,7 @@ Class UserRepository {
             
             if( empty($socialId) ){
             # no social id founded    
-                #create the social profile for the founded user
+            #create the social profile for the founded user
                 $this->registerSocialProfile ( $socialiteUser, $provider, $user->id );
             }
 
@@ -175,7 +175,7 @@ Class UserRepository {
 
 
         # assign a role to the user, use the pass role  or fallback to a default role
-        $assignedRole = $user->assignRole( $roleToAssign ); 
+        $user->assignRole( $roleToAssign ); 
        
         return $user;
     }

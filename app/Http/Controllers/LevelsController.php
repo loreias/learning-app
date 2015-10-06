@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 #import controller Level class
 use App\Level;
-use App\User;
+use App\Role;
 
 use App\Http\Requests;
 
@@ -20,6 +20,8 @@ use Carbon\Carbon;
 
 
 
+
+
 # use in store method
 # use Request;
 #use App\Http\Requests\CreateLevelRequest;
@@ -30,6 +32,12 @@ use Carbon\Carbon;
 
 class LevelsController extends Controller
 {
+
+    public function __con ()
+    {
+        
+    }
+
    
 	/**
 	* Display all levels
@@ -75,6 +83,39 @@ class LevelsController extends Controller
 
 
 
+
+
+
+    public function indexBackEnd ()
+    {
+        $levels = level::orderBy('level_index', 'ASC')->get();
+        
+        return view('levels.backend.index', compact('levels'));     
+
+    }
+
+
+
+    public function create( Role $role )
+    {
+
+        # will be use as current level_index for sorting the levels
+        $currentLevelIndex = Level::lastLelveIndex();    
+
+        $teachers = $role->getUsersByRoleName('teacher');
+
+        return view('levels.backend.create')->with([
+            'currentLevelIndex' => $currentLevelIndex,            
+            'teachers'          => $teachers,
+        ]);
+    }
+
+
+
+
+
+
+
     /**
     * Display single level
     *
@@ -100,20 +141,6 @@ class LevelsController extends Controller
 
 
     /**
-     * response to a create level route
-     * get: levels/create
-     */
-    public function create()
-    {
-
-        # will be use as current level_index for sorting the levels
-        $currentLevelIndex = Level::lastLelveIndex();    
-
-    	return view('levels.create', compact('currentLevelIndex'));
-    }
-
-
-    /**
      * save new level into db
      * @param CreateLevelRquest
      * @return response
@@ -122,7 +149,7 @@ class LevelsController extends Controller
      * validation fails, redirect back to the las route
      * validation success, process the store method   
      */
-    public function store(LevelRequest $request)
+    public function store( LevelRequest $request)
     { 
         /**
          * NOTE
@@ -173,8 +200,6 @@ class LevelsController extends Controller
          */
         Level::create($input);
         return redirect('levels');
-
-
     }
 
 

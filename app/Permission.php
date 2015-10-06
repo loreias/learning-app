@@ -6,12 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Permission extends Model
 {
+
+	protected $table = 'permissions';
+	
 	
 	protected $basePermissions =  [
 		'View Content' 			=> 'can_view', 		// regular user
 		'Teachers'				=> 'can_edit', 		// teachers
 		'Site Manager'			=> 'can_manage', 	//  manager account
-		'Site Aministrator' 	=> 'admin'		// super admin
+		'Site Aministrator' 	=> 'can_admin',		// super admin
 	];
 
 
@@ -25,7 +28,7 @@ class Permission extends Model
 	}
 
 
-
+	
 
 	/**
 	* ---------------

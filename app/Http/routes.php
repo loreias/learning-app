@@ -1,50 +1,9 @@
 <?php
 
-
-# calling PagesController controller with a index method 
-Route::get('/', function ()
-{	
-	# validate if user is logged in
-	if (Auth::check()) return 'Wellcome to the learning app: ' . Auth::user()->name;
-
-	// return link_to('login', 'Login with Google');
-	return redirect('login');
-
-});
-
-
 /**
- * LARAVEL AUTH controllers
- * 
+ * SITE FRONT END PAGES
  */
-
-
-// Authentication routes...
-
-Route::get('login', 'Auth\AuthController@getLogin');
-Route::post('login', 'Auth\AuthController@postLogin');
-Route::get('logout', 'Auth\AuthController@getLogout');
-
-
-// social users
-Route::get('login/{provider}', 'Auth\AuthController@loginWithProvider');
-
-
-// Registration routes...
-
-Route::get('register', 'Auth\AuthController@getRegister');
-Route::post('register', 'Auth\AuthController@postRegister');
-
-
-// Password reset link request routes...
-Route::get('password/email', 'Auth\PasswordController@getEmail');
-Route::post('password/email', 'Auth\PasswordController@postEmail');
-
-
-// Password reset routes...
-Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
-Route::post('password/reset', 'Auth\PasswordController@postReset');
-
+Route::get('/', 'PagesController@home');
 
 
 
@@ -56,10 +15,31 @@ Route::get('admin', 'AdminController@index');
 
 
 
-
 /**
- * REGISTER USERS 
+ * ------------------------
+ * LARAVEL AUTH controllers
+ * ------------------------
+ * login
+ * social users
+ * register
+ * psw reset
+ * logout
  */
+Route::get('login', 	'Auth\AuthController@getLogin');
+Route::post('login', 	'Auth\AuthController@postLogin');
+Route::get('logout', 	'Auth\AuthController@getLogout');
+
+Route::get('login/{provider}', 'Auth\AuthController@loginWithProvider');
+
+Route::get('register', 'Auth\AuthController@getRegister');
+Route::post('register', 'Auth\AuthController@postRegister');
+
+Route::get('password/email', 'Auth\PasswordController@getEmail');
+Route::post('password/email', 'Auth\PasswordController@postEmail');
+
+Route::get('password/reset/{token}', 'Auth\PasswordController@getReset');
+Route::post('password/reset', 'Auth\PasswordController@postReset');
+
 Route::get('profile', 'ProfileController@index');
 Route::get('profile/{user}', 'ProfileController@show');
 Route::get('profile/{user}/edit', 'ProfileController@edit');
@@ -70,7 +50,10 @@ Route::get('profile/{user}/edit', 'ProfileController@edit');
 /**
  * Levels  
  */
-Route::resource('levels', 'LevelsController');
+Route::get('admin/levels', 			'LevelsController@indexBackEnd'); 
+Route::post('admin/levels', 		'LevelsController@store'); 
+Route::get('admin/levels/create', 	'LevelsController@create'); 
+// Route::resource('levels', 'LevelsController');
 
 
 

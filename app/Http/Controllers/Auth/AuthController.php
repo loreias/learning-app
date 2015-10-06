@@ -29,6 +29,11 @@ class AuthController extends Controller
     protected $userRepo;
 
     protected $request;
+
+
+    protected $redirectPath = '/'; 
+
+    protected $loginPath = '/login';
     
 
     /**
@@ -103,7 +108,6 @@ class AuthController extends Controller
 
         # register the user
         $user = $this->userRepository->register($data);
-       
 
         # return redirect()->route('login')
         return redirect('login')    

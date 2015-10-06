@@ -14,16 +14,17 @@ class CreateLevelsTable extends Migration
     {
         Schema::create('levels', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id')->unsigned();// forner key for user id and needs to be positive(unsigned)
-            $table->integer('level_index');
+            $table->integer('level_index')->unsigned();
             $table->string('title');
             $table->string('description');
-            $table->integer('state'); // referes to the active state of the current level (draft/publish/un-publish/deleted)
-            // $table->integer('created_by')->unsigned(); // refrences to the user id that created this level
-            $table->integer('updated_by'); //id of last user to edit this level
-            $table->text('tags');
-            $table->timestamp('published_at');
-            $table->timestamp('deleted_at');
+            
+            $table->integer('status_id')->unsigned; // referes to the active status_id of the current level (draft/publish/un-publish/deleted)
+            $table->integer('user_id')->unsigned();// forner key for user id and needs to be positive(unsigned)
+            $table->integer('updated_by_id')->unsigned(); //id of last user to edit this level
+            // $table->integer('tags'); // create pivot table for many to many relation ship
+
+            $table->timestamp('published_at')->nullable();
+            $table->timestamp('deleted_at')->nullable();    
             $table->timestamps();
 
             // maps relation between forner key and source table    
@@ -32,6 +33,8 @@ class CreateLevelsTable extends Migration
                     ->on('users')           // table been refrences 
                     ->onDelete('no action'); //this will be in case user deletes the account will cascate down and delete any assiated or map date of it
             
+            $table->foreign('updated_by_id')->references('id')->on('users')->onDelete('no action');
+            // $table->foreign('status_id')->references('id')->on('status')->onDelete('no action');
         });
     }
 
